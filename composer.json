@@ -1,0 +1,20 @@
+{
+    "name": "johnuiterwyk/toptal-journey-planner",
+    "description": "A simple journey planner application",
+    "keywords": ["journey","journey"],
+    "homepage": "http://github.com/johnuiterwyk/Slim-Skeleton",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John Uiterwyk",
+            "email": "contact@johnuiterwyk.com",
+            "homepage": "http://www.johnuiterwyk.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "slim/slim": "^3.1",
+        "slim/php-view": "^2.0",
+        "monolog/monolog": "^1.17"
+    }
+}
