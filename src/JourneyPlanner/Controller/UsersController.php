@@ -36,16 +36,12 @@ class UsersController
         {
             if(isset($args['id']))
             {
-                //get one
                 $this->getUser($args['id']);
-
             }else
             {
-                //get all
                 $this->getAllUsers();
             }
         }
-
 
         if($request->isDelete() && isset($args['id']))
         {
@@ -56,7 +52,6 @@ class UsersController
         {
             $this->createUser($request->getParsedBody());
         }
-
 
         $jsonResponse = $response->withHeader('Content-type', 'application/json');
         return $jsonResponse;
