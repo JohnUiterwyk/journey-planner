@@ -15,6 +15,11 @@
         "php": ">=5.5.0",
         "slim/slim": "^3.1",
         "slim/php-view": "^2.0",
-        "monolog/monolog": "^1.17"
+        "monolog/monolog": "^1.17",
+        "j4mie/idiorm": "^1.5"
+    },
+    "autoload": {
+        "psr-4": { "JourneyPlanner\\": "src/JourneyPlanner/" }
     }
+
 }
