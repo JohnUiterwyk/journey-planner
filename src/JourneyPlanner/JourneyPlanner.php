@@ -8,7 +8,11 @@
 
 namespace JourneyPlanner;
 
+use ORM;
+use PDO;
 use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class JourneyPlanner
 {
@@ -34,23 +38,38 @@ class JourneyPlanner
         session_start();
 
         //get settings and instantiate app
-        $settings = new AppSettings();
-        $this->app = new App($settings->slimSettings);
+        $this->app = new App(AppConfig::$slimSettings);
 
         //configure app
-        $this->setUpDependencies();
+        $this->setUpDatabase();
         $this->setUpRoutes();
 
         //run all the apps!
         $this->app->run();
 
     }
-    public function setUpDependencies()
+    public function setUpDatabase()
     {
+        ORM::reset_db();
+        ORM::configure('driver_options', array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'));
+        $connectionString = "mysql:";
+        $connectionString .= "host=".AppConfig::$databaseSettings['server'].";";
+        $connectionString .= "port=".AppConfig::$databaseSettings['port'].";";
+        $connectionString .= "dbname=".AppConfig::$databaseSettings['name'];
 
+        ORM::configure($connectionString);
+        ORM::configure('username', AppConfig::$databaseSettings['username']);
+        ORM::configure('password', AppConfig::$databaseSettings['password']);
+        ORM::configure('return_result_sets', true);
+        ORM::configure('logging',true);
     }
     public function setUpRoutes()
     {
-        $this->app->any('/users[/{id}]', Controller\UsersController::class);
+        $this->app->get('/',function(Request $request, Response $response, array $args)
+        {
+           $response->getBody()->write(file_get_contents(AppConfig::getPathToPublic().'/app.html'));
+        });
+        $this->app->any('/users/[{id}]', Controller\UsersController::class);
+        $this->app->any('/sessions/[{key}]', Controller\SessionsController::class);
     }
 }

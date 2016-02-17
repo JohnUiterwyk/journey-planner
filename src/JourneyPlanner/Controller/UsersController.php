@@ -8,29 +8,28 @@
 
 namespace JourneyPlanner\Controller;
 
+use JourneyPlanner\Model\UserModel;
+use JourneyPlanner\Model\UsersModel;
+use ORM;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
-class UsersController
+class UsersController extends ApiController
 {
     /**
-     * @var \Psr\Http\Message\StreamInterface
+     * @var ORM
      */
-    private $body;
+    private $userTable;
 
     /**
-     * UserController constructor.
-     * @param $c \Interop\Container\ContainerInterface
-     */
-    public function __construct($container)
-    {
-        $this->body = $container->response->getBody();
-    }
-
-    /**
-     * @param $request \Slim\Http\Request
-     * @param $response \Slim\Http\Response
+     * __invoke is called by slim when a route matches
+     * @param $request Request
+     * @param $response Response
      * @param $args array
+     * *
+     * @return $response \Slim\Http\Response
      */
-    public function __invoke($request, $response, $args)
+    public function __invoke(Request $request, Response $response, array $args)
     {
         if($request->isGet())
         {
@@ -53,15 +52,41 @@ class UsersController
             $this->createUser($request->getParsedBody());
         }
 
-        $jsonResponse = $response->withHeader('Content-type', 'application/json');
-        return $jsonResponse;
+        return parent::__invoke($request, $response, $args);
     }
 
     /**
      */
+
+    /**
+     * @param $userId int
+     */
+    public function createUser(array $data)
+    {
+        if(isset($data['username']) && isset($data['password']) && isset($data['fullname']))
+        {
+            //check if username exists
+            if(UserModel::isUsernameAvailable($data['username']) === true)
+            {
+                //username unique
+                //create user
+                $newUserId = UserModel::createUser($data['username'],$data['password'], $data['fullname']);
+                $this->writeSuccess(UserModel::getUser($newUserId));
+
+            }else
+            {
+                $this->writeFail("Username already exists.");
+            }
+        }else
+        {
+            $this->writeFail("Required fields missing.");
+        }
+
+    }
+
     public function getAllUsers()
     {
-        $this->body->write("get all the users!".PHP_EOL);
+        $this->writeSuccess(UserModel::getUsers());
     }
 
     /**
@@ -69,23 +94,30 @@ class UsersController
      */
     public function getUser($userId)
     {
-        $this->body->write("get user ".$userId.PHP_EOL);
+        $result = UserModel::getUser($userId);
+        if($result !== false)
+        {
+            $this->writeSuccess($result);
+        }else
+        {
+            $this->writeFail("User not found.");
+        }
     }
+
 
     /**
      * @param $userId int
      */
     public function deleteUser($userId)
     {
-        $this->body->write("delete user ".$userId.PHP_EOL);
+        if(UserModel::deleteUser($userId) === true)
+        {
+            $this->writeSuccess("Deleted user ".$userId);
+        }else
+        {
+            $this->writeFail("User not found.");
+        }
     }
 
-    /**
-     * @param $userId int
-     */
-    public function createUser($data)
-    {
-        $this->body->write("the password is ".$data['password']);
-    }
 
 }
