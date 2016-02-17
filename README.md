@@ -1,6 +1,6 @@
 # Journey Planner
 
-Journey Planner is simple client side web application built using React and powered by a RESTful API built with Slim Framework.
+Journey Planner is as web application being developed with React and a PHP RESTful API, built with Slim Framework 3.
 
-API is currently being actively developed
-Client side app development to begin shortly.
+Development Task Board:
+https://trello.com/b/mczVBbE5/toptal-journey-planner
