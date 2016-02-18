@@ -9,6 +9,8 @@
 namespace JourneyPlanner\Controller;
 
 
+use JourneyPlanner\Model\User;
+use JourneyPlanner\Model\UserModel;
 use JourneyPlanner\Util\ApiResponse;
 use Slim\Container;
 use Slim\Http\Request;
@@ -21,12 +23,25 @@ class ApiController
      * @var \Psr\Http\Message\StreamInterface
      */
     protected $body;
+
+    /**
+     * @var User
+     */
+    protected $currentUser;
+
+    /**
+     * @var Response
+     */
+    protected $response;
+
+
     /**
      * UserController constructor.
      * @param $container Container
      */
     public function __construct(Container $container)
     {
+
         $this->body = $container->response->getBody();
     }
 
@@ -40,8 +55,20 @@ class ApiController
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $jsonResponse = $response->withHeader('Content-type', 'application/json');
-        return $jsonResponse;
+        $this->response = $response;
+        //check for api key
+        $queryParams = $request->getQueryParams();
+        if(isset($queryParams['key']))
+        {
+            $user = UserModel::getUserWithApiKey($queryParams['key']);
+            if($user !== false)
+            {
+                $this->currentUser = $user;
+            }
+
+        }
+
+        return $this->response->withHeader('Content-type', 'application/json');
     }
 
     public function writeResponse(ApiResponse $apiResponse)
