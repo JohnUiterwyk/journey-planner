@@ -31,4 +31,5 @@ class User
         if (isset($userData['password_hash'])) $this->password_hash = $userData['password_hash'];
         if (isset($userData['api_key'])) $this->api_key = $userData['api_key'];
     }
+
 }
