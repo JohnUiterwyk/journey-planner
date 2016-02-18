@@ -34,6 +34,15 @@ class UserModel
         $user->save();
         return $user->id();
     }
+    public static function updateUser($data)
+    {
+        $user = ORM::for_table("user")->create();
+        $user->username = $username;
+        $user->password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $user->fullname = $fullname;
+        $user->save();
+        return $user->id();
+    }
     public static function getUser($userId)
     {
         $user = ORM::for_table("user")
@@ -97,7 +106,23 @@ class UserModel
         }
     }
 
-    public static function getUserIdWithApiKey($apiKey)
+    public static function getNewApiKey($username, $password)
+    {
+
+        $user = ORM::for_table("user")->where('username',$username)->find_one();
+        if($user !== false && password_verify($password,$user->password_hash) === true)
+        {
+            //update api key
+            $user->api_key = TokenGenerator::getToken($user->username);
+            $user->save();
+            return $user->api_key;
+        }else
+        {
+            return false;
+        }
+    }
+
+    public static function getUserWithApiKey($apiKey)
     {
         $user = ORM::for_table("user")->where('api_key',$apiKey)->find_one();
         if($user === false)
@@ -105,7 +130,7 @@ class UserModel
             return false;
         }else
         {
-            return $user->id;
+            return new User($user->as_array());
         }
     }
 
