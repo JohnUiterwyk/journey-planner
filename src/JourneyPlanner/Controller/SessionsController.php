@@ -28,6 +28,14 @@ class SessionsController extends ApiController
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
+        parent::__invoke($request, $response, $args);
+
+        if($request->isPost())
+        {
+
+            $this->createSession($request->getParsedBody());
+        }
+
         if($request->isGet() && isset($args['key']))
         {
             $this->getSession($args['key']);
@@ -38,18 +46,12 @@ class SessionsController extends ApiController
             $this->deleteSession($args['id']);
         }
 
-        if($request->isPost())
-        {
-
-            $this->createSession($request->getParsedBody());
-        }
-
-        return parent::__invoke($request, $response, $args);
+        return $response;
     }
 
-    private function getSession($key)
+    private function getSession($apiKey)
     {
-        $result = ORM::for_table("session")->select('user_id')->where('key',$key)->find_one();
+        $result = UserModel::getUserIdWithApiKey($apiKey);
         if($result === false)
         {
             $this->writeFail("invalid key");
@@ -64,7 +66,6 @@ class SessionsController extends ApiController
         if(isset($data['username']) && isset($data['password']))
         {
             $result = UserModel::authenticateUser($data['username'], $data['password']);
-            //first authenticate the user
             //if successful, it returns the api key, otherwise it returns false
             if($result !== false)
             {
