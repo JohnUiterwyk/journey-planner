@@ -30,7 +30,7 @@ class ApiResponse
         $response = [];
         $response['status'] = $this->status;
         $response['data'] = $this->data;
-        return json_encode($response);
+        return json_encode($response, JSON_PRETTY_PRINT);
     }
     public function getData()
     {
