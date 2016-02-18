@@ -69,9 +69,9 @@ class JourneyPlanner
         {
            $response->getBody()->write(file_get_contents(AppConfig::getPathToPublic().'/app.html'));
         });
-        $this->app->any('/users/[{id}]', Controller\UsersController::class);
-        $this->app->any('/sessions/[{api_key}]', Controller\SessionsController::class);
-        $this->app->any('/trips/[id]', Controller\TripsController::class);
-        $this->app->any('/trips/user/[{user_id}]', Controller\TripsController::class);
+        $this->app->any('/api/users/[{id}]', Controller\UsersController::class);
+        $this->app->any('/api/sessions/[{api_key}]', Controller\SessionsController::class);
+        $this->app->any('/api/trips/[id]', Controller\TripsController::class);
+        $this->app->any('/api/trips/user/[{user_id}]', Controller\TripsController::class);
     }
 }
