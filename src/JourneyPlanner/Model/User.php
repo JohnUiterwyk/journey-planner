@@ -15,6 +15,7 @@ class User
     public $username;
     public $role;
     public $fullname;
+    public $password;
     public $password_hash;
     public $api_key;
 
@@ -22,7 +23,7 @@ class User
     const ROLE_NORMAL = 0;
     const ROLE_ADMIN = 100;
 
-    public function __construct(array $userData)
+    public function __construct(array $userData = [])
     {
         if (isset($userData['id'])) $this->id = $userData['id'];
         if (isset($userData['username'])) $this->username = $userData['username'];
@@ -32,4 +33,15 @@ class User
         if (isset($userData['api_key'])) $this->api_key = $userData['api_key'];
     }
 
-}
+    public function hasId()
+    {
+        return( $this->id !== null);
+    }
+
+    public function isAdmin()
+    {
+        return( $this->role >= User::ROLE_ADMIN);
+    }
+
+
+};

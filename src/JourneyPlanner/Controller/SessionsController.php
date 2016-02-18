@@ -36,9 +36,9 @@ class SessionsController extends ApiController
             $this->createSession($request->getParsedBody());
         }
 
-        if($request->isGet() && isset($args['key']))
+        if($request->isGet() && isset($args['api_key']))
         {
-            $this->getSession($args['key']);
+            $this->getSession($args['api_key']);
         }
 
         if($request->isDelete() && isset($args['id']))
@@ -49,23 +49,11 @@ class SessionsController extends ApiController
         return $response;
     }
 
-    private function getSession($apiKey)
-    {
-        $result = UserModel::getUserIdWithApiKey($apiKey);
-        if($result === false)
-        {
-            $this->writeFail("invalid key");
-        }else
-        {
-            $this->writeSuccess(["user_id"=>$result]);
-        }
-    }
-
     private function createSession($data)
     {
         if(isset($data['username']) && isset($data['password']))
         {
-            $result = UserModel::authenticateUser($data['username'], $data['password']);
+            $result = UserModel::getNewApiKey($data['username'], $data['password']);
             //if successful, it returns the api key, otherwise it returns false
             if($result !== false)
             {
@@ -82,9 +70,24 @@ class SessionsController extends ApiController
 
     }
 
-    private function deleteSession($key)
+    private function getSession($apiKey)
     {
-        UserModel::resetApiKey($key);
+        $user = UserModel::getUserWithApiKey($apiKey);
+        unset($user['password_hash']); //remove password_hash
+
+        if($user === false)
+        {
+            $this->writeFail("invalid api key");
+        }else
+        {
+            $this->writeSuccess($user);
+        }
+    }
+
+
+    private function deleteSession($apiKey)
+    {
+        UserModel::resetApiKey($apiKey);
         $this->writeSuccess("Session deleted.");
     }
 }

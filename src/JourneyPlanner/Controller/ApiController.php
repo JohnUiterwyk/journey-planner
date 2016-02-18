@@ -58,12 +58,12 @@ class ApiController
         $this->response = $response;
         //check for api key
         $queryParams = $request->getQueryParams();
-        if(isset($queryParams['key']))
+        if(isset($queryParams['api_key']))
         {
-            $user = UserModel::getUserWithApiKey($queryParams['key']);
-            if($user !== false)
+            $userData = UserModel::getUserWithApiKey($queryParams['api_key']);
+            if($userData !== false)
             {
-                $this->currentUser = $user;
+                $this->currentUser = new User($userData);
             }
 
         }
@@ -91,5 +91,19 @@ class ApiController
         $apiResponse->setStatusFail();
         $apiResponse->setData($data);
         $this->body->write($apiResponse->toJSON());
+    }
+
+    public function writeUnauthorized()
+    {
+        $apiResponse = new ApiResponse();
+        $apiResponse->setStatusFail();
+        $apiResponse->setData("Unauthorized");
+        $this->body->write($apiResponse->toJSON());
+        $this->response = $this->response->withStatus(401);
+    }
+
+    public function isUserAuthenticated()
+    {
+        return $this->currentUser !== null;
     }
 }

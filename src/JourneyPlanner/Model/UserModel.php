@@ -14,16 +14,6 @@ use ORM;
 
 class UserModel
 {
-    public static function getUsers()
-    {
-        return ORM::for_table("user")
-            ->select("id")
-            ->select("role")
-            ->select("fullname")
-            ->select("username")
-            ->order_by_asc('id')
-            ->find_array();
-    }
     public static function createUser($username, $password, $fullname)
     {
         $user = ORM::for_table("user")->create();
@@ -34,14 +24,17 @@ class UserModel
         $user->save();
         return $user->id();
     }
+
     public static function updateUser($data)
     {
-        $user = ORM::for_table("user")->create();
-        $user->username = $username;
-        $user->password_hash = password_hash($password, PASSWORD_DEFAULT);
-        $user->fullname = $fullname;
+        $user = ORM::for_table("user")->find_one($data['id']);
+        $user->username = $data["username"];
+        $user->fullname = $data["fullname"];
+        if(isset($data['password']))
+        {
+            $user->password_hash = password_hash($data['password'],PASSWORD_DEFAULT);
+        }
         $user->save();
-        return $user->id();
     }
     public static function getUser($userId)
     {
@@ -60,14 +53,19 @@ class UserModel
             return false;
         }
     }
-    public static function deleteUser($userId)
+    public static function getUsers()
     {
-        $user = ORM::for_table("user")
+        return ORM::for_table("user")
             ->select("id")
             ->select("role")
             ->select("fullname")
             ->select("username")
-            ->find_one($userId);
+            ->order_by_asc('id')
+            ->find_array();
+    }
+    public static function deleteUser($userId)
+    {
+        $user = ORM::for_table("user")->find_one($userId);
         if($user !== false)
         {
             return $user->delete();
@@ -76,6 +74,8 @@ class UserModel
             return false;
         }
     }
+
+    //Help functions
     public static function isUsernameAvailable($username)
     {
         $user = ORM::for_table("user")->where('username',$username)->find_one();
@@ -85,7 +85,7 @@ class UserModel
             return true;
         }else
         {
-            //username as found, so it is not available
+            //username is found, so it is not available
             return false;
         }
     }
@@ -96,9 +96,6 @@ class UserModel
         $user = ORM::for_table("user")->where('username',$username)->find_one();
         if($user !== false && password_verify($password,$user->password_hash) === true)
         {
-            //update api key
-            $user->api_key = TokenGenerator::getToken($user->username);
-            $user->save();
             return $user->api_key;
         }else
         {
@@ -108,12 +105,11 @@ class UserModel
 
     public static function getNewApiKey($username, $password)
     {
-
+        //authenticate, then regen apikey
         $user = ORM::for_table("user")->where('username',$username)->find_one();
         if($user !== false && password_verify($password,$user->password_hash) === true)
         {
-            //update api key
-            $user->api_key = TokenGenerator::getToken($user->username);
+            $user->api_key = TokenGenerator::getToken($username);
             $user->save();
             return $user->api_key;
         }else
@@ -130,7 +126,7 @@ class UserModel
             return false;
         }else
         {
-            return new User($user->as_array());
+            return $user->as_array();
         }
     }
 
@@ -142,4 +138,5 @@ class UserModel
         $user->save();
 
     }
+
 }
