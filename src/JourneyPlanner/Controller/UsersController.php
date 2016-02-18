@@ -8,6 +8,7 @@
 
 namespace JourneyPlanner\Controller;
 
+use JourneyPlanner\Model\User;
 use JourneyPlanner\Model\UserModel;
 use JourneyPlanner\Model\UsersModel;
 use ORM;
@@ -31,6 +32,9 @@ class UsersController extends ApiController
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
+
+        $this->response =  parent::__invoke($request, $response, $args);
+
         if($request->isGet())
         {
             if(isset($args['id']))
@@ -51,13 +55,44 @@ class UsersController extends ApiController
         {
             $this->createUser($request->getParsedBody());
         }
+        if($request->isPut())
+        {
+            $this->updateUser($request->getParsedBody());
+        }
 
-        return parent::__invoke($request, $response, $args);
+
+        return $this->response;
     }
 
     /**
      */
+    public function getAllUsers()
+    {
+        if($this->currentUser !== null && $this->currentUser->role >= User::ROLE_ADMIN)
+        {
+            $this->writeSuccess(UserModel::getUsers());
 
+        }else
+        {
+            $this->response = $this->response->withStatus(401);
+            $this->writeFail("Unauthorized.");
+        }
+    }
+
+    /**
+     * @param $userId int
+     */
+    public function getUser($userId)
+    {
+        $result = UserModel::getUser($userId);
+        if($result !== false)
+        {
+            $this->writeSuccess($result);
+        }else
+        {
+            $this->writeFail("User not found.");
+        }
+    }
     /**
      * @param $userId int
      */
@@ -84,38 +119,47 @@ class UsersController extends ApiController
 
     }
 
-    public function getAllUsers()
-    {
-        $this->writeSuccess(UserModel::getUsers());
-    }
-
     /**
      * @param $userId int
      */
-    public function getUser($userId)
+    public function updateUser(array $data)
     {
-        $result = UserModel::getUser($userId);
-        if($result !== false)
+        $userToUpdate  = new User($data);
+
+        //check we have an update id, then check the current user is either admin or editing his own
+        if($userToUpdate->id !==  null
+            && $this->currentUser !=null
+            && ($this->currentUser->role >= User::ROLE_ADMIN || $this->currentUser->id === $userToUpdate->id ))
         {
-            $this->writeSuccess($result);
+            //all good, update the user
+
+
         }else
         {
-            $this->writeFail("User not found.");
+            $this->writeFail("Required fields missing.");
         }
-    }
 
+    }
 
     /**
      * @param $userId int
      */
     public function deleteUser($userId)
     {
-        if(UserModel::deleteUser($userId) === true)
+        if($this->currentUser !== null && $this->currentUser->role >= User::ROLE_ADMIN)
         {
-            $this->writeSuccess("Deleted user ".$userId);
+            if(UserModel::deleteUser($userId) === true)
+            {
+                $this->writeSuccess("Deleted user ".$userId);
+            }else
+            {
+                $this->writeFail("User not found.");
+            }
+
         }else
         {
-            $this->writeFail("User not found.");
+            $this->response = $this->response->withStatus(401);
+            $this->writeFail("Unauthorized.");
         }
     }
 
