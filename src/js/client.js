@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, Route, IndexRoute,  } from "react-router";
-import createBrowserHistory from 'history/lib/createBrowserHistory'
+import { Router, Route, IndexRoute,  hashHistory, browserHistory} from "react-router";
 
 import Users from "./pages/Users";
 import Trips from "./pages/Trips";
@@ -12,7 +11,7 @@ const app = document.getElementById('app');
 
 
 ReactDOM.render(
-  <Router history={createBrowserHistory()}>
+  <Router history={hashHistory}>
     <Route path="/" component={Layout}>
       <IndexRoute component={Trips}></IndexRoute>
       <Route path="users" component={Users}></Route>
