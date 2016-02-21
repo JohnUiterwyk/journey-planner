@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Router, Route, IndexRoute, hashHistory } from "react-router";
+import { Router, Route, IndexRoute,  } from "react-router";
+import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 import Users from "./pages/Users";
 import Trips from "./pages/Trips";
@@ -9,8 +10,9 @@ import Settings from "./pages/Settings";
 
 const app = document.getElementById('app');
 
+
 ReactDOM.render(
-  <Router history={hashHistory}>
+  <Router history={createBrowserHistory()}>
     <Route path="/" component={Layout}>
       <IndexRoute component={Trips}></IndexRoute>
       <Route path="users" component={Users}></Route>

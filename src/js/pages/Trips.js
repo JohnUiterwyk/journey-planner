@@ -42,7 +42,7 @@ export default class Featured extends React.Component {
     return (
       <div>
         <button onClick={this.reloadTrips.bind(this)}>Reload!</button>
-        <h1>Trips</h1>
+        <h1>My Trips</h1>
         <ul>{TripComponents}</ul>
       </div>
     );
