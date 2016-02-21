@@ -23,12 +23,12 @@ export function reloadTrips() {
     dispatcher.dispatch({type: "RECEIVE_TRIPS", trips: [
       {
         id: 8484848484,
-        text: "Go Shopping Again",
+        text: "Mexico",
         complete: false
       },
       {
         id: 6262627272,
-        text: "Hug Wife",
+        text: "Had Rin",
         complete: true
       },
     ]});
