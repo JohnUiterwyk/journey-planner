@@ -44,7 +44,7 @@ class AppViewController extends React.Component
     return (
       <div>
 
-        <NavView location={location} authenticated={authenticated}/>
+        <NavView location={location} authenticated={authenticated} currentUser={this.state.currentUser}/>
 
         <div class="container" style={containerStyle}>
           <div class="row">

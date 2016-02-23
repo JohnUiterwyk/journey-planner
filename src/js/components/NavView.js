@@ -37,14 +37,19 @@ class NavView extends React.Component {
             </li>
           </ul>)
     } else {
-      return (
+        if(this.props.currentUser.role >= 100)
+        {
+            var manageUsersLink =
+                <li class={usersClass}>
+                    <Link to="Users" onClick={this.toggleCollapse.bind(this)}>Users</Link>
+                </li>
+        }
+        return (
           <ul className="nav navbar-nav navbar-right">
             <li class={tripsClass}>
-              <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Trips</IndexLink>
+              <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Home</IndexLink>
             </li>
-            <li class={usersClass}>
-              <Link to="Users" onClick={this.toggleCollapse.bind(this)}>Users</Link>
-            </li>
+              {manageUsersLink}
             <li class={settingsClass}>
               <Link to="settings" onClick={this.toggleCollapse.bind(this)}>Settings</Link>
             </li>
