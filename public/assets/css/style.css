@@ -1,0 +1,26 @@
+body {
+}
+
+.trip-list
+{
+
+}
+.trip-list-header-row
+{
+    background-color: #eee;
+}
+.trip-list-row
+ {
+    border: solid 1px #eee;
+
+ }
+.trip-list-row > div
+ {
+    border-left: solid 1px #eee;
+
+ }
+.datepicker__input
+{
+    padding: 8px 12px;
+    height:38px;
+}
