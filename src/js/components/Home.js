@@ -12,14 +12,21 @@ class Home extends React.Component {
             return "Welcome "+this.props.currentUser.fullname;
         }else
         {
-            return "Hi, please login";
+            return "Hi, please login or signup";
         }
 
     }
     render() {
+        if(this.props.currentUser)
+        {
+            var currentUserJson = <pre>{JSON.stringify(this.props.currentUser, null, '\t')}</pre>;
+        }
         return (
             <div>
                 <h1>{this.getWelcomeMessage()}</h1>
+
+                    {currentUserJson}
+
             </div>
         );
     }
