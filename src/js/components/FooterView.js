@@ -1,7 +1,7 @@
 import React from "react";
 
 
-export default class Footer extends React.Component {
+export default class FooterView extends React.Component {
   render() {
     const footerStyles = {
       marginTop: "30px",

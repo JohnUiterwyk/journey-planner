@@ -3,7 +3,7 @@
  */
 import React from 'react';
 
-class Home extends React.Component {
+class HomeView extends React.Component {
     getWelcomeMessage()
     {
         let {authenticated} = this.props;
@@ -32,4 +32,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default HomeView;

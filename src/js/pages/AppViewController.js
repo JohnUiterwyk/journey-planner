@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
 
-import Footer from "../components/Footer";
-import Nav from "../components/Nav";
+import FooterView from "../components/FooterView";
+import NavView from "../components/NavView";
 
 import LoginStore from "../stores/LoginStore";
 import LoginAction from "../actions/LoginAction"
@@ -44,7 +44,7 @@ class AppViewController extends React.Component
     return (
       <div>
 
-        <Nav location={location} authenticated={authenticated}/>
+        <NavView location={location} authenticated={authenticated}/>
 
         <div class="container" style={containerStyle}>
           <div class="row">
@@ -54,7 +54,7 @@ class AppViewController extends React.Component
 
             </div>
           </div>
-          <Footer/>
+          <FooterView/>
         </div>
       </div>
 

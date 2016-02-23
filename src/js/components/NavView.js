@@ -2,7 +2,7 @@ import React from "react";
 import { IndexLink, Link } from "react-router";
 import LoginAction from "../actions/LoginAction"
 
-class Nav extends React.Component {
+class NavView extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -79,4 +79,4 @@ class Nav extends React.Component {
   }
 }
 
-  export default Nav;
+  export default NavView;

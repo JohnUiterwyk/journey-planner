@@ -5,7 +5,7 @@ import { Router, Route, IndexRoute,  hashHistory, browserHistory} from "react-ro
 import AppViewController from "./pages/AppViewController";
 import LoginView from "./components/LoginView";
 import SignUpView from "./components/SignUpView";
-import Home from "./components/Home";
+import HomeView from "./components/HomeView";
 
 const app = document.getElementById('app');
 
@@ -13,7 +13,7 @@ const app = document.getElementById('app');
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={AppViewController}>
-        <IndexRoute component={Home}/>
+        <IndexRoute component={HomeView}/>
         <Route path="login" component={LoginView}/>
         <Route path="signup" component={SignUpView}/>
     </Route>
