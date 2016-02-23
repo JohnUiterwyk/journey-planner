@@ -68,7 +68,7 @@ class ApiController
 
         }
 
-        return $this->response->withHeader('Content-type', 'application/json');
+        $this->response =  $this->response->withHeader('Content-type', 'application/json');
     }
 
     public function writeResponse(ApiResponse $apiResponse)
@@ -89,17 +89,18 @@ class ApiController
     {
         $apiResponse = new ApiResponse();
         $apiResponse->setStatusFail();
+        $this->response = $this->response->withStatus(400);
         $apiResponse->setData($data);
         $this->body->write($apiResponse->toJSON());
     }
 
     public function writeUnauthorized()
     {
+        $this->response = $this->response->withStatus(401);
         $apiResponse = new ApiResponse();
         $apiResponse->setStatusFail();
         $apiResponse->setData("Unauthorized");
         $this->body->write($apiResponse->toJSON());
-        $this->response = $this->response->withStatus(401);
     }
 
     public function isUserAuthenticated()

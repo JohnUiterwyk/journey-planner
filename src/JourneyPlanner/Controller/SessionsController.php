@@ -46,7 +46,7 @@ class SessionsController extends ApiController
             $this->deleteSession($args['id']);
         }
 
-        return $response;
+        return $this->response;
     }
 
     private function createSession($data)
@@ -61,11 +61,11 @@ class SessionsController extends ApiController
                 $this->writeSuccess($result);
             }else
             {
-                $this->writeFail("Authentication failed");
+                $this->writeUnauthorized();
             }
         }else
         {
-            $this->writeFail("Authentication failed");
+            $this->writeUnauthorized();
         }
 
 
@@ -78,7 +78,7 @@ class SessionsController extends ApiController
 
         if($user === false)
         {
-            $this->writeFail("invalid api key");
+            $this->writeUnauthorized();
         }else
         {
             $this->writeSuccess($user);
