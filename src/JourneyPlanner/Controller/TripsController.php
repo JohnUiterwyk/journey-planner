@@ -28,7 +28,7 @@ class TripsController extends ApiController
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $this->response =  parent::__invoke($request, $response, $args);
+        parent::__invoke($request, $response, $args);
 
         //create
         if($request->isPost())

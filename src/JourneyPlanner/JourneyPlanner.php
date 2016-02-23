@@ -71,7 +71,7 @@ class JourneyPlanner
         });
         $this->app->any('/api/users/[{id}]', Controller\UsersController::class);
         $this->app->any('/api/sessions/[{api_key}]', Controller\SessionsController::class);
-        $this->app->any('/api/trips/[id]', Controller\TripsController::class);
+        $this->app->any('/api/trips/[{id}]', Controller\TripsController::class);
         $this->app->any('/api/trips/user/[{user_id}]', Controller\TripsController::class);
     }
 }
