@@ -38,6 +38,12 @@ class LoginView extends React.Component {
         LoginAction.startLoginRequest(username, password);
     }
     render() {
+        if(this.props.message && this.props.message !== "")
+        {
+            var alert =
+                <div className="alert alert-danger">{this.props.message}
+                </div>;
+        }
         return (
         <div className="login jumbotron center-block">
             <h1>Login</h1>
@@ -67,6 +73,8 @@ class LoginView extends React.Component {
                 </div>
                 <button type="submit" className="btn btn-default" >Submit</button>
             </form>
+
+            {alert}
             <pre>
                 {JSON.stringify(this.props, null, '\t')}
             </pre>
