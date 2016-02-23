@@ -1,7 +1,8 @@
 import React from "react";
 import { IndexLink, Link } from "react-router";
+import LoginAction from "../actions/LoginAction"
 
-export default class Nav extends React.Component {
+class Nav extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -13,13 +14,49 @@ export default class Nav extends React.Component {
     const collapsed = !this.state.collapsed;
     this.setState({collapsed});
   }
+  logout(e)
+  {
+    e.preventDefault();
+    LoginAction.logout();
+  }
 
-  render() {
+  getNavLinks()
+  {
     const { location } = this.props;
-    const { collapsed } = this.state;
     const tripsClass = location.pathname === "/" ? "active" : "";
     const usersClass = location.pathname.match(/^\/users/) ? "active" : "";
     const settingsClass = location.pathname.match(/^\/settings/) ? "active" : "";
+    if (!this.props.authenticated) {
+      return (
+          <ul className="nav navbar-nav navbar-right">
+            <li>
+              <Link to="login">Login</Link>
+            </li>
+            <li>
+              <Link to="signup">Signup</Link>
+            </li>
+          </ul>)
+    } else {
+      return (
+          <ul className="nav navbar-nav navbar-right">
+            <li class={tripsClass}>
+              <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Trips</IndexLink>
+            </li>
+            <li class={usersClass}>
+              <Link to="Users" onClick={this.toggleCollapse.bind(this)}>Users</Link>
+            </li>
+            <li class={settingsClass}>
+              <Link to="settings" onClick={this.toggleCollapse.bind(this)}>Settings</Link>
+            </li>
+            <li>
+              <a onClick={this.logout.bind(this)}>Logout</a>
+            </li>
+          </ul>)
+    }
+  }
+
+  render() {
+    const { collapsed } = this.state;
     const navClass = collapsed ? "collapse" : "";
 
     return (
@@ -34,20 +71,12 @@ export default class Nav extends React.Component {
             </button>
           </div>
           <div class={"navbar-collapse " + navClass} id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-              <li class={tripsClass}>
-                <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Trips</IndexLink>
-              </li>
-              <li class={usersClass}>
-                <Link to="Users" onClick={this.toggleCollapse.bind(this)}>Users</Link>
-              </li>
-              <li class={settingsClass}>
-                <Link to="settings" onClick={this.toggleCollapse.bind(this)}>Settings</Link>
-              </li>
-            </ul>
+            {this.getNavLinks()}
           </div>
         </div>
       </nav>
     );
   }
 }
+
+  export default Nav;

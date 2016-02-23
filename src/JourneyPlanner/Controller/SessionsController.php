@@ -53,11 +53,12 @@ class SessionsController extends ApiController
     {
         if(isset($data['username']) && isset($data['password']))
         {
-            $result = UserModel::getNewApiKey($data['username'], $data['password']);
+            $result = UserModel::authenticateUser($data['username'], $data['password']);
             //if successful, it returns the api key, otherwise it returns false
             if($result !== false)
             {
-                $this->writeSuccess(["api_key"=>$result]);
+                unset($result['password_hash']);
+                $this->writeSuccess($result);
             }else
             {
                 $this->writeFail("Authentication failed");

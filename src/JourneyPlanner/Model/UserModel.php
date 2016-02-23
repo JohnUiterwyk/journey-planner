@@ -21,6 +21,7 @@ class UserModel
         $user->password_hash = password_hash($password, PASSWORD_DEFAULT);
         $user->fullname = $fullname;
         $user->role = 0;
+        $user->api_key = TokenGenerator::getToken($username);
         $user->save();
         return $user->id();
     }
@@ -96,7 +97,7 @@ class UserModel
         $user = ORM::for_table("user")->where('username',$username)->find_one();
         if($user !== false && password_verify($password,$user->password_hash) === true)
         {
-            return $user->api_key;
+            return $user->as_array();
         }else
         {
             return false;
