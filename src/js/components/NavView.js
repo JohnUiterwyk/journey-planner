@@ -23,7 +23,8 @@ class NavView extends React.Component {
   getNavLinks()
   {
     const { location } = this.props;
-    const tripsClass = location.pathname === "/" ? "active" : "";
+    const homeClass = location.pathname === "/" ? "active" : "";
+    const tripsClass = location.pathname.match(/^\/trips/) ? "active" : "";
     const usersClass = location.pathname.match(/^\/users/) ? "active" : "";
     const settingsClass = location.pathname.match(/^\/settings/) ? "active" : "";
     if (!this.props.authenticated) {
@@ -46,8 +47,11 @@ class NavView extends React.Component {
         }
         return (
           <ul className="nav navbar-nav navbar-right">
+              <li class={homeClass} >
+                  <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Home</IndexLink>
+              </li>
             <li class={tripsClass}>
-              <IndexLink to="/" onClick={this.toggleCollapse.bind(this)}>Home</IndexLink>
+              <IndexLink to="trips" onClick={this.toggleCollapse.bind(this)}>Trips</IndexLink>
             </li>
               {manageUsersLink}
             <li class={settingsClass}>

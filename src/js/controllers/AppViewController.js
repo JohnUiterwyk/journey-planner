@@ -23,6 +23,26 @@ class AppViewController extends React.Component
 
   getLoginState() {
     this.setState(LoginStore.getAll());
+
+    /**
+     * START DEBUG AUTO LOGIN
+     */
+    if(true)
+    {
+      this.setState({
+        currentUser:{
+          id: 6,
+          role: 100,
+          fullname: "john 3",
+          username: "john3",
+          api_key: "1234"
+        },
+        authenticated:true
+      });
+    }
+    /**
+     * END DEBUG AUTO LOGIN
+     */
   }
 
   componentWillMount() {
@@ -32,6 +52,10 @@ class AppViewController extends React.Component
 
   componentWillUnmount() {
     LoginStore.removeListener("change", this.getLoginState.bind(this));
+  }
+  isLoggedIn()
+  {
+    return this.state.authenticated;
   }
 
   render() {
@@ -48,7 +72,7 @@ class AppViewController extends React.Component
 
         <div class="container" style={containerStyle}>
           <div class="row">
-            <div class="col-lg-12">
+            <div class="col-xs-12">
 
               {React.cloneElement(this.props.children, {currentUser: this.state.currentUser,authenticated:this.state.authenticated, message:this.state.message})}
 
