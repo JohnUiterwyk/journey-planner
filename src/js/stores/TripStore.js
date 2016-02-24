@@ -18,11 +18,11 @@ class TripStore extends EventEmitter {
             editMode:
             {
                 enabled: false,
-                tripId:null,
+                trip:null,
                 errorMessage:null
             },
-            createErrorMessage:null
-
+            tripFormErrorMessage:null,
+            filterString:null
             //this.currentUser = {
             //        id: 1,
             //        username: "john",
@@ -44,15 +44,48 @@ class TripStore extends EventEmitter {
                 this.emit("change");
                 break;
             }
+
             case ActionType.TRIP_CREATE_SUCCESS: {
-                this.store.createErrorMessage = null;
+                this.store.tripFormErrorMessage = null;
                 this.emit("change");
                 break;
             }
             case ActionType.TRIP_CREATE_FAIL: {
-                this.store.createErrorMessage = action.message;
+                this.store.tripFormErrorMessage = action.message;
                 this.emit("change");
                 break;
+            }
+
+            case ActionType.TRIP_LOAD_FOR_EDIT: {
+                this.store.editMode.enabled = true;
+                this.store.editMode.trip = action.trip;
+                this.store.editMode.message = "";
+                this.emit("change");
+                break;
+            }
+            case ActionType.TRIP_CANCEL_EDIT: {
+                this.store.editMode.enabled = false;
+                this.store.editMode.trip = null;
+                this.store.editMode.message = "";
+                this.emit("change");
+                break;
+            }
+            case ActionType.TRIP_UPDATE_SUCCESS:{
+                this.store.editMode.enabled = false;
+                this.store.editMode.trip = null;
+                this.store.editMode.message = "";
+                this.emit("change");
+                break;
+            }
+            case ActionType.TRIP_UPDATE_FAIL:{
+                this.store.editMode.message = action.message;
+                this.emit("change");
+                break;
+            }
+
+            case ActionType.TRIP_FILTER_STRING_UPDATE:{
+                this.store.filterString = action.filterString;
+                this.emit("change");
             }
         }
     }

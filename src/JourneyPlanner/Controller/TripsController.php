@@ -103,7 +103,7 @@ class TripsController extends ApiController
             $this->writeSuccess(['id'=>$newTripId]);
         }catch(NestedValidationException $exception)
         {
-            $this->writeFail($exception->getMessages());
+            $this->writeFail($exception->getFullMessage());
             return;
         }
 
@@ -178,7 +178,7 @@ class TripsController extends ApiController
             $tripValidator->assert($data);
         }catch(NestedValidationException $exception)
         {
-            $this->writeFail($exception->getMessages());
+            $this->writeFail($exception->getFullMessage());
             return;
         }
 

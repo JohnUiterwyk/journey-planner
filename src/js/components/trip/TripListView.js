@@ -10,12 +10,23 @@ class TripListView extends React.Component {
     render() {
         const trips= this.props.trips;
 
-        const TripListRowViews = trips.map((trip) => {
-            return <TripListRowView  key={trip.id} {...trip} currentUser={this.props.currentUser} />;
-        });
+        var tripRows =[];
+        for (var i = 0; i < trips.length; i++) {
+            {
+                var trip = trips[i];
+
+                if(this.props.filterString === null
+                    || this.props.filterString === ""
+                    || trip.destination.toLowerCase().indexOf(this.props.filterString.toLowerCase()) > -1)
+                {
+                    tripRows.push(
+                        <TripListRowView  key={trip.id} {...trip} currentUser={this.props.currentUser} />
+                    );
+                }
+            }}
         return (
-            <div className="row trip-filter-view ">
-                <h1>Trips</h1>
+            <div className="row trip-list">
+                <h1>All Trips</h1>
                 <ul className="col-xs-12 list-unstyled trip-list">
                     <li className="row trip-list-header-row">
                         <div className="col-sm-1">Days away</div>
@@ -27,7 +38,7 @@ class TripListView extends React.Component {
                         <div className="col-sm-2">Action</div>
                     </li>
 
-                    {TripListRowViews}
+                    {tripRows}
                 </ul>
             </div>
         );

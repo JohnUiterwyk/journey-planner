@@ -9,6 +9,7 @@ import { Link } from "react-router";
 import TripFilterView from "../components/trip/TripFilterView"
 import TripListView from "../components/trip/TripListView"
 import TripCreateView from "../components/trip/TripCreateView"
+import TripPrintMonthView from "../components/trip/TripPrintMonthView"
 
 import TripStore from "../stores/TripStore"
 import TripAction from "../actions/TripAction"
@@ -30,7 +31,7 @@ class TripsViewController extends React.Component
     {
         if(this.props.currentUser)
         {
-            TripAction.refreshAllTrips(this.props.currentUser.api_key,this.props.currentUser.id)
+            TripAction.refreshAllTrips()
         }
     }
     getTrips() {
@@ -38,8 +39,11 @@ class TripsViewController extends React.Component
     }
 
     componentWillMount() {
-        this.refreshTrips();
        TripStore.on("change", this.getTrips.bind(this));
+    }
+    componentDidMount()
+    {
+        this.refreshTrips();
     }
 
     componentWillUnmount() {
@@ -55,9 +59,10 @@ class TripsViewController extends React.Component
 
         return (
             <div id="TripViewController">
-                <TripCreateView currentUser={this.props.currentUser} message={this.props.createErrorMessage}/>
-                <TripFilterView/>
-                <TripListView trips={this.state.trips} currentUser={this.props.currentUser} />
+                <TripCreateView currentUser={this.props.currentUser} message={this.props.createErrorMessage} editMode={this.state.editMode}/>
+                <TripFilterView filterString={this.state.filterString}/>
+                <TripPrintMonthView trips={this.state.trips} currentUser={this.props.currentUser}  filterString={this.state.filterString}/>
+                <TripListView trips={this.state.trips} currentUser={this.props.currentUser}  filterString={this.state.filterString}/>
             </div>
 
         );

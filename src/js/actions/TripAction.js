@@ -13,9 +13,20 @@ class TripAction {
     constructor() {
     }
 
-    refreshAllTrips(apiKey, userId) {
-        axios.get('/api/trips/user/' + userId + "?api_key=" + apiKey)
-            .then(this.gotAllTrips.bind(this));
+    refreshAllTrips() {
+        var user_api_key = localStorage.getItem("user_api_key");
+        var user_id = localStorage.getItem("user_id");
+        var user_role = localStorage.getItem("user_role");
+        if(user_role >= 100)
+        {
+            axios.get('/api/trips/?api_key=' + user_api_key)
+                .then(this.gotAllTrips.bind(this));
+        }else
+        {
+            axios.get('/api/trips/user/' + user_id + "?api_key=" + user_api_key)
+                .then(this.gotAllTrips.bind(this));
+        }
+
 
     }
 
@@ -31,12 +42,13 @@ class TripAction {
     }
 
     //note we need to allow for all users
-    createTrip(apiKey, current_user_id, user_id, destination, start_date, end_date, comment) {
-        axios.post('/api/trips/'+ "?api_key=" + apiKey, {user_id, destination, start_date, end_date, comment})
+    createTrip(trip) {
+        var user_api_key = localStorage.getItem("user_api_key");
+        axios.post('/api/trips/'+ "?api_key=" + user_api_key, trip)
             .then((function(response)
             {
                 this.createSuccess(response);
-                this.refreshAllTrips(apiKey,current_user_id)
+                this.refreshAllTrips()
             }).bind(this))
             .catch(this.createFail.bind(this));
     }
@@ -59,16 +71,69 @@ class TripAction {
         });
     }
 
-    deleteTrip(apiKey, currentUserId, tripId) {
-        axios.delete('/api/trips/'+tripId+ "?api_key=" + apiKey)
+    loadTripForEdit(trip)
+    {
+        console.log(ActionType.TRIP_LOAD_FOR_EDIT);
+        dispatcher.dispatch({
+            type: ActionType.TRIP_LOAD_FOR_EDIT,
+            trip: trip
+        });
+    }
+
+    cancelEdit()
+    {
+        console.log(ActionType.TRIP_CANCEL_EDIT);
+        dispatcher.dispatch({
+            type: ActionType.TRIP_CANCEL_EDIT
+        });
+    }
+
+    saveEdit(trip)
+    {
+        console.log("TRIP_SAVE_EDIT");
+        var user_api_key = localStorage.getItem("user_api_key");
+        axios.put('/api/trips/'+ "?api_key=" + user_api_key, trip)
+            .then(this.updateSuccess.bind(this))
+            .catch(this.updateFail.bind(this));
+    }
+    updateSuccess(response)
+    {
+        console.log(ActionType.TRIP_UPDATE_SUCCESS);
+        console.log(response);
+        dispatcher.dispatch({
+            type: ActionType.TRIP_UPDATE_SUCCESS
+        });
+        this.refreshAllTrips();
+    }
+    updateFail(response)
+    {
+        console.log(ActionType.TRIP_UPDATE_FAIL);
+        console.log(response);
+        dispatcher.dispatch({
+            type: ActionType.TRIP_UPDATE_FAIL,
+            message: response.data.data
+        });
+    }
+
+    deleteTrip(tripId) {
+        var user_api_key = localStorage.getItem("user_api_key");
+        axios.delete('/api/trips/'+tripId+ "?api_key=" + user_api_key)
             .then((function(response)
             {
                 dispatcher.dispatch({
                     type: ActionType.TRIP_DELETED,
                     message: response.data.data
                 });
-                this.refreshAllTrips(apiKey,currentUserId)
+                this.refreshAllTrips();
             }).bind(this))
+    }
+
+    updateFilterString(filterString)
+    {
+        dispatcher.dispatch({
+            type: ActionType.TRIP_FILTER_STRING_UPDATE,
+            filterString: filterString
+        });
     }
 
 }

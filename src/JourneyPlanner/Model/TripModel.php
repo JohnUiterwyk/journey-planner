@@ -49,11 +49,11 @@ class TripModel
     }
     public static function getAllTrips()
     {
-        return ORM::for_table("trip")->order_by_asc('user_id')->order_by_asc('id')->find_array();
+        return ORM::for_table("trip")->order_by_asc('start_date')->find_array();
     }
     public static function getUserTrips($userId)
     {
-        return ORM::for_table("trip")->order_by_asc('id')->where('user_id',$userId)->find_array();
+        return ORM::for_table("trip")->order_by_asc('start_date')->where('user_id',$userId)->find_array();
     }
     public static function deleteTrip($tripId)
     {

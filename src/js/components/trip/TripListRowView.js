@@ -27,13 +27,24 @@ class TripListRowView extends React.Component {
     }
     editTrip()
     {
+        var trip =
+            {
+                id: this.props.id,
+                user_id: this.props.user_id,
+                destination: this.props.destination,
+                start_date: this.props.start_date,
+                end_date: this.props.end_date,
+                comment: this.props.comment
+            };
+
+        TripAction.loadTripForEdit(trip);
 
     }
     deleteTrip()
     {
         if(confirm("Are you sure you want to delete the trip to " + this.props.destination))
         {
-            TripAction.deleteTrip(this.props.currentUser.api_key,this.props.currentUser.id, this.props.id);
+            TripAction.deleteTrip(this.props.id);
         }
     }
     render() {
@@ -49,20 +60,20 @@ class TripListRowView extends React.Component {
             paddingRight:"5px"
         };
 
-        return (
-            <li className="row trip-list-row">
-                <div className="col-xs-1">{this.getDayCount()}</div>
-                <div className="col-xs-1">{userId}</div>
-                <div className="col-xs-2">{destination}</div>
-                <div className="col-xs-2">{startDate}</div>
-                <div className="col-xs-2">{endDate}</div>
-                <div className="col-xs-2">{comment}</div>
-                <div className="col-xs-2" style={actionStyle}>
-                    <button  onClick={this.editTrip.bind(this)}>edit</button>
-                    <button onClick={this.deleteTrip.bind(this)}>delete</button>
-                </div>
-            </li>
-        );
+            return (
+                <li className="row trip-list-row">
+                    <div className="col-xs-1">{this.getDayCount()}</div>
+                    <div className="col-xs-1">{userId}</div>
+                    <div className="col-xs-2">{destination}</div>
+                    <div className="col-xs-2">{startDate}</div>
+                    <div className="col-xs-2">{endDate}</div>
+                    <div className="col-xs-2">{comment}</div>
+                    <div className="col-xs-2" style={actionStyle}>
+                        <button  onClick={this.editTrip.bind(this)}>edit</button>
+                        <button onClick={this.deleteTrip.bind(this)}>delete</button>
+                    </div>
+                </li>
+            );
     }
 }
 

@@ -14,6 +14,7 @@ class TripCreateView extends React.Component {
         super(props, context);
         this.state =
         {
+            trip_id:null,
             destination : "",
             startDate : null,
             endDate : null,
@@ -30,6 +31,37 @@ class TripCreateView extends React.Component {
             this.setState({user_id:this.props.currentUser.id});
         }
     }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.editMode && nextProps.editMode.enabled)
+        {
+            this.setState({
+                trip_id:nextProps.editMode.trip.id,
+                destination:nextProps.editMode.trip.destination,
+                startDate:moment(nextProps.editMode.trip.start_date),
+                endDate:moment(nextProps.editMode.trip.end_date),
+                comment:nextProps.editMode.trip.comment,
+                user_id:nextProps.editMode.trip.user_id
+            });
+        }
+        else
+        {
+            this.setState({
+                trip_id:null,
+                destination : "",
+                startDate : null,
+                endDate : null,
+                comment : "",
+                user_id : null
+            });
+            if(this.props.currentUser)
+            {
+                this.setState({user_id:this.props.currentUser.id});
+            }
+        }
+
+    }
+
     handleUserIdChange(e) {
         this.setState({user_id: e.target.value});
     }
@@ -59,19 +91,45 @@ class TripCreateView extends React.Component {
         e.preventDefault();
         var apiKey = this.props.currentUser.api_key;
 
-        var destination = this.state.destination;
-        var startDate = moment(this.state.startDate).format('YYYY-MM-DD');
-        var endDate = moment(this.state.endDate).format('YYYY-MM-DD');
-        var comment = this.state.comment;
-        var userId = this.state.user_id;
-        var currentUserId = this.props.currentUser.id;
-
-        if (!destination || !startDate || !user_id) {
+        var trip =
+        {
+            id:this.state.trip_id,
+            destination:this.state.destination,
+            start_date:moment(this.state.startDate).format('YYYY-MM-DD'),
+            end_date:moment(this.state.endDate).format('YYYY-MM-DD'),
+            comment:this.state.comment,
+            user_id:this.state.user_id
+        };
+        if (!trip.destination || !trip.start_date || !trip.user_id) {
             return;
         }
-        TripAction.createTrip(apiKey,currentUserId,userId,destination, startDate,endDate,comment);
+        if(this.props.editMode && this.props.editMode.enabled)
+        {
+            TripAction.saveEdit(trip);
+        }else
+        {
+            TripAction.createTrip(trip);
+
+        }
     }
+    handleCancel()
+    {
+        this.setState({
+            trip_id:null,
+            destination : "",
+            startDate : null,
+            endDate : null,
+            comment : ""
+        });
+        if(this.props.currentUser)
+        {
+            this.setState({user_id:this.props.currentUser.id});
+        }
+        TripAction.cancelEdit();
+    }
+
     render() {
+
         if(this.props.message && this.props.message !== "")
         {
             var alert =
@@ -137,9 +195,10 @@ class TripCreateView extends React.Component {
                             ref="destination"
                         />
                     </div>
-                    <div class="form-group col-sm-1">
-                        <div>&nbsp;</div>
-                    <button type="submit" class="btn btn-default">{this.props.editMode ? "Edit" : "Create"}</button>
+                    <div class="form-group col-sm-2">
+                        <br/>
+                    <button type="submit" class="btn btn-default">{this.props.editMode && this.props.editMode.enabled ? "Save" : "Create"}</button>
+                        <button class="btn btn-default" onClick={this.handleCancel.bind(this)}>Cancel</button>
                     </div>
                 </form>
 
