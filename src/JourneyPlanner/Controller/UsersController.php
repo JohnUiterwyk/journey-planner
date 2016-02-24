@@ -30,7 +30,7 @@ class UsersController extends ApiController
      */
     public function __invoke(Request $request, Response $response, array $args)
     {
-        $this->response =  parent::__invoke($request, $response, $args);
+         parent::__invoke($request, $response, $args);
 
         //create
         if($request->isPost())
@@ -99,7 +99,7 @@ class UsersController extends ApiController
             }
         }catch(NestedValidationException $exception)
         {
-            $this->writeFail($exception->getMessages());
+            $this->writeFail($exception->getFullMessage());
             return;
         }
 
@@ -166,7 +166,7 @@ class UsersController extends ApiController
 
         }catch(NestedValidationException $exception)
         {
-            $this->writeFail($exception->getMessages());
+            $this->writeFail($exception->getFullMessage());
             return;
         }
 

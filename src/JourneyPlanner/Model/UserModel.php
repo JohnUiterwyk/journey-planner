@@ -31,7 +31,7 @@ class UserModel
         $user = ORM::for_table("user")->find_one($data['id']);
         $user->username = $data["username"];
         $user->fullname = $data["fullname"];
-        if(isset($data['password']))
+        if(isset($data['password']) && $data['password'] !== "")
         {
             $user->password_hash = password_hash($data['password'],PASSWORD_DEFAULT);
         }
@@ -61,6 +61,7 @@ class UserModel
             ->select("role")
             ->select("fullname")
             ->select("username")
+            ->select("api_key")
             ->order_by_asc('id')
             ->find_array();
     }
