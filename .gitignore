@@ -2,4 +2,3 @@
 /logs/*
 !/logs/README.md
 node_modules
-/public/assets/js/client.min.js
