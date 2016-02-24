@@ -27,19 +27,19 @@ class AppViewController extends React.Component
     /**
      * START DEBUG AUTO LOGIN
      */
-    if(true)
-    {
-      this.setState({
-        currentUser:{
-          id: 6,
-          role: 100,
-          fullname: "john 3",
-          username: "john3",
-          api_key: "1234"
-        },
-        authenticated:true
-      });
-    }
+    //if(true)
+    //{
+    //  this.setState({
+    //    currentUser:{
+    //      id: 6,
+    //      role: 100,
+    //      fullname: "john 3",
+    //      username: "john3",
+    //      api_key: "1234"
+    //    },
+    //    authenticated:true
+    //  });
+    //}
     /**
      * END DEBUG AUTO LOGIN
      */

@@ -10,55 +10,73 @@ import ActionType from "../constants/ActionTypes";
 class LoginStore extends EventEmitter {
     constructor() {
         super();
-        this.status = {
+        this.store = {
             authenticated: false,
             pending: false,
             message: "",
             currentUser: null
-
-            //this.currentUser = {
-            //        id: 1,
-            //        username: "john",
-            //        fullname: "John Uiterwyk",
-            //        role: 100,
-            //        api_key: "4ef018808d581dec89cea8758d64ea1e4383c09f"
-            //    };
+        };
+        if(localStorage.getItem("user_id") !== null)
+        {
+            this.store.currentUser = {
+                id:localStorage.getItem("user_id"),
+                username:localStorage.getItem("user_username"),
+                fullname:localStorage.getItem("user_fullname"),
+                role:localStorage.getItem("user_role"),
+                api_key:localStorage.getItem("user_api_key")
+            }
+            this.store.authenticated = true;
         }
+
     }
 
     getAll() {
-        return this.status;
+        return this.store;
     }
 
     handleActions(action) {
         switch(action.type) {
             case ActionType.LOGIN_REQUEST_SENT: {
-                this.status.currentUser = null;
-                this.status.authenticated = false;
-                this.status.pending = true;
+                this.store.currentUser = null;
+                this.store.authenticated = false;
+                this.store.pending = true;
                 this.emit("change");
                 break;
             }
 
             case ActionType.LOGIN_SUCCES_RECIEVED: {
-                this.status.currentUser = action.currentUser;
-                this.status.authenticated = true;
-                this.status.pending = false;
+
+                localStorage.setItem("user_api_key", action.currentUser.api_key);
+                localStorage.setItem("user_id", action.currentUser.id);
+                localStorage.setItem("user_role", action.currentUser.role);
+                localStorage.setItem("user_username", action.currentUser.username);
+                localStorage.setItem("user_fullname", action.currentUser.fullname);
+                
+                this.store.currentUser = action.currentUser;
+                this.store.authenticated = true;
+                this.store.pending = false;
                 this.emit("change");
                 break;
             }
             case ActionType.LOGIN_ERROR_RECIEVED: {
-                this.status.currentUser = null;
-                this.status.authenticated = false;
-                this.status.pending = false;
-                this.status.message = action.errorMessage;
+                this.store.currentUser = null;
+                this.store.authenticated = false;
+                this.store.pending = false;
+                this.store.message = action.errorMessage;
                 this.emit("change");
                 break;
             }
             case ActionType.LOGOUT: {
-                this.status.currentUser = null;
-                this.status.authenticated = false;
-                this.status.pending = false;
+
+                localStorage.setItem("user_api_key", null);
+                localStorage.setItem("user_id", null);
+                localStorage.setItem("user_role", null);
+                localStorage.setItem("user_username", null);
+                localStorage.setItem("user_fullname", null);
+
+                this.store.currentUser = null;
+                this.store.authenticated = false;
+                this.store.pending = false;
                 this.emit("change");
                 break;
             }

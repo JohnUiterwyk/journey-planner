@@ -67,9 +67,11 @@ class LoginAction {
     logout()
     {
         console.log("LoginAction.logout");
+        localStorage.removeItem("currentUser");
         dispatcher.dispatch({
             type: ActionType.LOGOUT
         });
+        hashHistory.push("/");
 
     }
 

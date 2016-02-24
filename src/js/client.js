@@ -7,7 +7,9 @@ import LoginView from "./components/LoginView";
 import SignUpView from "./components/SignUpView";
 import HomeView from "./components/HomeView";
 import TripsViewController from "./controllers/TripsViewController"
+import UsersViewController from "./controllers/UsersViewController"
 const app = document.getElementById('app');
+
 
 
 ReactDOM.render(
@@ -17,6 +19,7 @@ ReactDOM.render(
         <Route path="login" component={LoginView}/>
         <Route path="signup" component={SignUpView}/>
         <Route path="trips" component={TripsViewController} />
+        <Route path="users" component={UsersViewController} />
     </Route>
   </Router>,
 app);
