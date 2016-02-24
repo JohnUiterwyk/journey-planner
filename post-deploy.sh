@@ -1,0 +1,1 @@
+sudo composer install

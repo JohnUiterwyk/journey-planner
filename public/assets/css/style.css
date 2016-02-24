@@ -24,3 +24,56 @@ body {
     padding: 8px 12px;
     height:38px;
 }
+.trip-filter-view
+{
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid #eee;
+}
+
+.user-list
+{
+
+}
+.user-list-header-row
+{
+    background-color: #eee;
+}
+.user-list-row
+{
+    border: solid 1px #eee;
+
+}
+.user-list-row > div
+{
+    border-left: solid 1px #eee;
+
+}
+
+
+#hidden-print-iframe
+{
+    height: 0px;
+    width: 0px;
+    position: absolute;
+}
+
+.dont-break-out {
+
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+
+}
